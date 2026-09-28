@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "expo-hinge": ["../src/index"],
+      "expo-hinge/*": ["../src/*"]
+    }
+  }
+}
