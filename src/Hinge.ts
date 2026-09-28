@@ -1,5 +1,5 @@
 import type { AngleChangeListenerOptions } from './AngleChangeListenerOptions';
-import ExpoHingeModule from './ExpoHingeModule';
+import ExpoFoldablesModule from './ExpoFoldablesModule';
 import type { HingeState } from './HingeState';
 import type { HingeSubscription } from './HingeSubscription';
 import type { degreesToRadians } from './angleConversion';
@@ -80,19 +80,19 @@ export interface HingeModule {
  */
 export const Hinge: HingeModule = {
   get isAvailable() {
-    return ExpoHingeModule.isAvailable;
+    return ExpoFoldablesModule.isAvailable;
   },
 
   get isAngleAvailable() {
-    return ExpoHingeModule.isAngleAvailable;
+    return ExpoFoldablesModule.isAngleAvailable;
   },
 
   getState() {
-    return ExpoHingeModule.getState() ?? undefined;
+    return ExpoFoldablesModule.getState() ?? undefined;
   },
 
   addOnStateChangeListener(listener) {
-    return ExpoHingeModule.addListener('onStateChange', ({ state }) => {
+    return ExpoFoldablesModule.addListener('onStateChange', ({ state }) => {
       listener(state ?? undefined);
     });
   },
@@ -104,7 +104,7 @@ export const Hinge: HingeModule = {
         `minDeltaDegrees must be a finite number >= 0, received ${minDeltaDegrees}.`
       );
     }
-    if (!ExpoHingeModule.isAngleAvailable) {
+    if (!ExpoFoldablesModule.isAngleAvailable) {
       throw new Error(
         'The hinge angle is not available on this device. Check Hinge.isAngleAvailable first, ' +
           'or use Hinge.getState() to read the hinge posture instead.'
@@ -112,7 +112,7 @@ export const Hinge: HingeModule = {
     }
 
     let lastAngleDegrees: number | undefined;
-    return ExpoHingeModule.addListener('onAngleChange', ({ angleDegrees }) => {
+    return ExpoFoldablesModule.addListener('onAngleChange', ({ angleDegrees }) => {
       if (
         lastAngleDegrees !== undefined &&
         Math.abs(angleDegrees - lastAngleDegrees) < minDeltaDegrees

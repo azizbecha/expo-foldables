@@ -28,7 +28,7 @@ export class NativeModule {
   }
 }
 
-/** Stands in for the native ExpoHinge module. Tests mutate it to simulate a device. */
+/** Stands in for the native ExpoFoldables module. Tests mutate it to simulate a device. */
 class FakeHingeModule extends NativeModule {
   isAvailable = false;
   isAngleAvailable = false;

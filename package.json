@@ -1,5 +1,5 @@
 {
-  "name": "expo-hinge",
+  "name": "expo-foldables",
   "version": "0.1.0",
   "description": "Expo module exposing hinge posture, angle, and fold geometry for foldable devices (iPhone Duo, Android foldables)",
   "main": "build/index.js",
@@ -18,19 +18,19 @@
   "keywords": [
     "react-native",
     "expo",
-    "expo-hinge",
+    "expo-foldables",
     "foldable",
     "hinge",
     "iphone-duo",
     "posture"
   ],
-  "repository": "https://github.com/azizbecha/expo-hinge",
+  "repository": "https://github.com/azizbecha/expo-foldables",
   "bugs": {
-    "url": "https://github.com/azizbecha/expo-hinge/issues"
+    "url": "https://github.com/azizbecha/expo-foldables/issues"
   },
   "author": "Aziz Becha <aziz07becha@gmail.com> (https://github.com/azizbecha)",
   "license": "MIT",
-  "homepage": "https://github.com/azizbecha/expo-hinge#readme",
+  "homepage": "https://github.com/azizbecha/expo-foldables#readme",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.26.0",

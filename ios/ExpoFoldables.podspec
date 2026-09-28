@@ -8,13 +8,13 @@ package = JSON.parse(File.read(File.join(__dir__, '..', 'package.json')))
 MIN_XCODE_VERSION = '27.1'
 xcode_version = `xcodebuild -version 2>/dev/null`[/Xcode (\d+(\.\d+)*)/, 1]
 if xcode_version && Gem::Version.new(xcode_version) < Gem::Version.new(MIN_XCODE_VERSION)
-  message = "[expo-hinge] Xcode #{MIN_XCODE_VERSION} or newer is required to build ExpoHinge " \
+  message = "[expo-foldables] Xcode #{MIN_XCODE_VERSION} or newer is required to build ExpoFoldables " \
             "(found Xcode #{xcode_version}). The iOS build will fail with missing UIHinge symbols."
   defined?(Pod::UI) ? Pod::UI.warn(message) : warn(message)
 end
 
 Pod::Spec.new do |s|
-  s.name           = 'ExpoHinge'
+  s.name           = 'ExpoFoldables'
   s.version        = package['version']
   s.summary        = package['description']
   s.description    = package['description']
@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
     :ios => '16.4'
   }
   s.swift_version  = '5.9'
-  s.source         = { git: 'https://github.com/azizbecha/expo-hinge.git', tag: s.version.to_s }
+  s.source         = { git: 'https://github.com/azizbecha/expo-foldables.git', tag: s.version.to_s }
   s.static_framework = true
 
   s.dependency 'ExpoModulesCore'

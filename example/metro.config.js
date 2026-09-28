@@ -20,7 +20,7 @@ config.resolver.nodeModulesPaths = [
 ];
 
 config.resolver.extraNodeModules = {
-  'expo-hinge': '..',
+  'expo-foldables': '..',
 };
 
 config.watchFolders = [path.resolve(__dirname, '..')];

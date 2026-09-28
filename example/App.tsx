@@ -1,4 +1,4 @@
-import { Hinge, degreesToRadians, useHinge, useHingeAngle } from 'expo-hinge';
+import { Hinge, degreesToRadians, useHinge, useHingeAngle } from 'expo-foldables';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 
 export default function App() {
@@ -8,7 +8,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
-        <Text style={styles.header}>expo-hinge</Text>
+        <Text style={styles.header}>expo-foldables</Text>
         <Group name="Capabilities">
           <Text>isAvailable: {String(Hinge.isAvailable)}</Text>
           <Text>isAngleAvailable: {String(Hinge.isAngleAvailable)}</Text>

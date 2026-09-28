@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "expo-hinge-example",
-    "slug": "expo-hinge-example",
+    "name": "expo-foldables-example",
+    "slug": "expo-foldables-example",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "expo.modules.hinge.example"
+      "bundleIdentifier": "expo.modules.foldables.example"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +18,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "expo.modules.hinge.example"
+      "package": "expo.modules.foldables.example"
     },
     "web": {
       "favicon": "./assets/favicon.png"

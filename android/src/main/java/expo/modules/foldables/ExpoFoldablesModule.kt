@@ -1,4 +1,4 @@
-package expo.modules.hinge
+package expo.modules.foldables
 
 import android.app.Activity
 import android.content.Context
@@ -26,7 +26,7 @@ private const val ANGLE_CHANGE_EVENT = "onAngleChange"
 private const val CLOSED_MAX_DEGREES = 10f
 private const val FULLY_OPEN_MIN_DEGREES = 170f
 
-class ExpoHingeModule : Module(), SensorEventListener {
+class ExpoFoldablesModule : Module(), SensorEventListener {
   private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
   private var layoutJob: Job? = null
   private var isSensorRegistered = false
@@ -54,7 +54,7 @@ class ExpoHingeModule : Module(), SensorEventListener {
     get() = hingeSensor != null || hasSeenFold
 
   override fun definition() = ModuleDefinition {
-    Name("ExpoHinge")
+    Name("ExpoFoldables")
 
     Events(STATE_CHANGE_EVENT, ANGLE_CHANGE_EVENT)
 

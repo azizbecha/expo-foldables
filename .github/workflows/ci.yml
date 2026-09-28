@@ -41,8 +41,8 @@ jobs:
       - name: Generate example Android project
         working-directory: example
         run: bunx expo prebuild --platform android --no-install
-      - name: Compile expo-hinge Kotlin
+      - name: Compile expo-foldables Kotlin
         working-directory: example/android
-        run: ./gradlew :expo-hinge:compileDebugKotlin
+        run: ./gradlew :expo-foldables:compileDebugKotlin
 
   # iOS is not built in CI yet: the hinge APIs need Xcode 27.1, which hosted runners do not provide.

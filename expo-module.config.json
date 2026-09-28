@@ -1,9 +1,9 @@
 {
   "platforms": ["apple", "android"],
   "apple": {
-    "modules": ["ExpoHingeModule"]
+    "modules": ["ExpoFoldablesModule"]
   },
   "android": {
-    "modules": ["expo.modules.hinge.ExpoHingeModule"]
+    "modules": ["expo.modules.foldables.ExpoFoldablesModule"]
   }
 }

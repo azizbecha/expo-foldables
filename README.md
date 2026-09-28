@@ -1,4 +1,4 @@
-# expo-hinge
+# expo-foldables
 
 Hinge posture, angle, and fold geometry for foldable devices: iPhone Duo and Android foldables.
 
@@ -37,7 +37,7 @@ Expo Go is not supported. Use a [development build](https://docs.expo.dev/develo
 ## Installation
 
 ```sh
-npx expo install expo-hinge
+npx expo install expo-foldables
 ```
 
 Then rebuild your app:
@@ -55,7 +55,7 @@ npx expo run:android
 devices without a hinge, so one check covers every phone.
 
 ```tsx
-import { useHinge } from 'expo-hinge';
+import { useHinge } from 'expo-foldables';
 
 function Reader() {
   const hinge = useHinge();
@@ -87,7 +87,7 @@ function Reader() {
 tiny changes and limit re-renders.
 
 ```tsx
-import { degreesToRadians, useHingeAngle } from 'expo-hinge';
+import { degreesToRadians, useHingeAngle } from 'expo-foldables';
 
 function Lid() {
   const angleDegrees = useHingeAngle({ minDeltaDegrees: 1 });
@@ -109,7 +109,7 @@ function Lid() {
 Outside React, or when you need full control over subscriptions:
 
 ```ts
-import { Hinge } from 'expo-hinge';
+import { Hinge } from 'expo-foldables';
 
 const state = Hinge.getState(); // HingeState | undefined
 

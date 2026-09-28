@@ -4,7 +4,7 @@ import UIKit
 private let stateChangeEvent = "onStateChange"
 private let angleChangeEvent = "onAngleChange"
 
-public class ExpoHingeModule: Module {
+public class ExpoFoldablesModule: Module {
   private let lock = NSLock()
   private var hingeState: HingeState?
   private var isObservingState = false
@@ -13,7 +13,7 @@ public class ExpoHingeModule: Module {
   @MainActor private var observerView: HingeObserverView?
 
   public func definition() -> ModuleDefinition {
-    Name("ExpoHinge")
+    Name("ExpoFoldables")
 
     Events(stateChangeEvent, angleChangeEvent)
 
