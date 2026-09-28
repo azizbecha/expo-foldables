@@ -35,7 +35,7 @@ class ExpoFoldablesModule : Module(), SensorEventListener {
   @Volatile private var density = 1f
   @Volatile private var angleDegrees: Float? = null
   @Volatile private var hasSeenFold = false
-  @Volatile private var lastState: Map<String, Any?>? = null
+  @Volatile private var lastState: Map<String, Any>? = null
   @Volatile private var isObservingState = false
   @Volatile private var isObservingAngle = false
 
@@ -138,15 +138,15 @@ class ExpoFoldablesModule : Module(), SensorEventListener {
     }
   }
 
-  private fun currentState(): Map<String, Any?>? {
+  private fun currentState(): Map<String, Any>? {
     if (!isAvailable) {
       return null
     }
     val feature = foldingFeature
-    return mapOf(
-      "posture" to posture(feature),
-      "fold" to feature?.let(::foldToMap)
-    )
+    val state = mutableMapOf<String, Any>("posture" to posture(feature))
+    // Omit `fold` rather than sending null: the JS type is `fold?: Fold`.
+    feature?.let { state["fold"] = foldToMap(it) }
+    return state
   }
 
   private fun posture(feature: FoldingFeature?): String {

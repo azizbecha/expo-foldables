@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { Hinge } from '../Hinge';
+import type { HingeState } from '../HingeState';
 import { fakeHingeModule } from './expoStub';
 import { bookState } from './fixtures';
 
@@ -102,5 +103,23 @@ describe('Hinge.addOnAngleChangeListener', () => {
 
     expect(coarse).toHaveBeenCalledTimes(1);
     expect(fine).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('native fold: null', () => {
+  // Android sent `fold: null` when no fold crossed the window, which crashed state comparison.
+  const nullFold = { posture: 'closed', fold: null } as unknown as HingeState;
+
+  it('is normalized by getState', () => {
+    fakeHingeModule.state = nullFold;
+    expect(Hinge.getState()).toEqual({ posture: 'closed' });
+    expect(Hinge.getState()).not.toHaveProperty('fold');
+  });
+
+  it('is normalized in state change events', () => {
+    const listener = vi.fn();
+    Hinge.addOnStateChangeListener(listener);
+    fakeHingeModule.emit('onStateChange', { state: nullFold });
+    expect(listener).toHaveBeenCalledWith({ posture: 'closed' });
   });
 });

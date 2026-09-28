@@ -74,3 +74,15 @@ describe('useHinge', () => {
     expect(result.current).toEqual(flatState);
   });
 });
+
+describe('useHinge with native fold: null', () => {
+  it('does not crash when the fold disappears', () => {
+    fakeHingeModule.state = bookState;
+    const { result } = renderHook(() => useHinge());
+    const closed = { posture: 'closed', fold: null };
+    act(() => fakeHingeModule.emit('onStateChange', { state: closed }));
+    expect(result.current).toEqual({ posture: 'closed' });
+    act(() => fakeHingeModule.emit('onStateChange', { state: closed }));
+    expect(result.current).toEqual({ posture: 'closed' });
+  });
+});

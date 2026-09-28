@@ -88,12 +88,12 @@ export const Hinge: HingeModule = {
   },
 
   getState() {
-    return ExpoFoldablesModule.getState() ?? undefined;
+    return fromNativeState(ExpoFoldablesModule.getState());
   },
 
   addOnStateChangeListener(listener) {
     return ExpoFoldablesModule.addListener('onStateChange', ({ state }) => {
-      listener(state ?? undefined);
+      listener(fromNativeState(state));
     });
   },
 
@@ -124,3 +124,14 @@ export const Hinge: HingeModule = {
     });
   },
 };
+
+function fromNativeState(state: HingeState | null): HingeState | undefined {
+  if (state === null) {
+    return undefined;
+  }
+  // Guard against native code sending `fold: null`; the public type uses an optional field.
+  if (state.fold === null) {
+    return { posture: state.posture };
+  }
+  return state;
+}
