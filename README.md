@@ -7,7 +7,17 @@ Hinge posture, angle, and fold geometry for foldable devices: iPhone Duo and And
 - **React hooks** built on a plain imperative API, so you can use either.
 
 <p align="center">
-  <img src=".github/assets/iphone-duo.png" width="720" alt="Example app on the iPhone Duo simulator, half open at 127.5 degrees, showing a vertical separating fold" />
+  <img src=".github/assets/iphone-duo.png" width="720" alt="Example app on iPhone Duo, half open at 127 degrees: a two-pane book layout split exactly at the fold" />
+</p>
+
+<p align="center">
+  <img src=".github/assets/pixel-fold.png" height="360" alt="Example app on a Pixel 9 Pro Fold, fully open at 180 degrees" />
+  &nbsp;
+  <img src=".github/assets/pixel-fold-cover.png" height="360" alt="Example app on the Pixel 9 Pro Fold cover screen, closed at 0 degrees" />
+</p>
+
+<p align="center">
+  <sub>The example app on iPhone Duo (half open) and a Pixel 9 Pro Fold (fully open, and closed on the cover screen).</sub>
 </p>
 
 ## Contents
