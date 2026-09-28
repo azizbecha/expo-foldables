@@ -2,6 +2,7 @@ import { NativeModule, requireNativeModule } from 'expo';
 
 import type { Hinge } from './Hinge';
 import type { HingeState } from './HingeState';
+import { getNativeModuleOverride } from './nativeModuleOverride';
 
 /** Events emitted by the native module. Internal: the public API is {@linkcode Hinge}. */
 export type ExpoFoldablesModuleEvents = {
@@ -19,4 +20,19 @@ export declare class ExpoFoldablesModule extends NativeModule<ExpoFoldablesModul
   getAngleDegrees(): number | null;
 }
 
-export default requireNativeModule<ExpoFoldablesModule>('ExpoFoldables');
+let nativeModule: ExpoFoldablesModule | undefined;
+
+/**
+ * Returns the native module, resolved on first use and cached. Tests can replace it with
+ * `installHingeMock()` from `expo-foldables/testing`.
+ */
+export default function getExpoFoldablesModule(): ExpoFoldablesModule {
+  const override = getNativeModuleOverride();
+  if (override !== undefined) {
+    return override;
+  }
+  if (nativeModule === undefined) {
+    nativeModule = requireNativeModule<ExpoFoldablesModule>('ExpoFoldables');
+  }
+  return nativeModule;
+}

@@ -7,6 +7,7 @@
 ### 🎉 New features
 
 - Config plugin (`"plugins": ["expo-foldables"]`): adopts the UIScene life cycle required by the iOS 27.1 SDK, and makes sure folding doesn't restart the Android activity.
+- Test utilities: `installHingeMock()` from `expo-foldables/testing` simulates a foldable in Jest or Vitest, and `jest-expo` now mocks the native module automatically as a device without a hinge.
 
 ### 🐛 Bug fixes
 

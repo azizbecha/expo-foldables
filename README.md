@@ -27,6 +27,7 @@ Hinge posture, angle, and fold geometry for foldable devices: iPhone Duo and And
 - [Usage](#usage)
 - [API](#api)
 - [How it works](#how-it-works)
+- [Testing](#testing)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 
@@ -235,6 +236,49 @@ Platform details worth knowing:
   comes from the hinge sensor: 10° or less is `closed`, 170° or more is `fully-open`.
 - **Android without a hinge sensor.** `isAvailable` turns `true` only once the system first reports a fold, and
   `isAngleAvailable` stays `false`.
+
+## Testing
+
+With [`jest-expo`](https://docs.expo.dev/develop/unit-testing/), components using this package render as a device
+without a hinge, with no setup.
+
+To simulate a foldable, install a mock from `expo-foldables/testing`. `Hinge`, `useHinge` and `useHingeAngle` run
+their real code against it:
+
+```tsx
+import { act, render, screen } from '@testing-library/react-native';
+import { installHingeMock, type HingeMock } from 'expo-foldables/testing';
+
+let hinge: HingeMock;
+beforeEach(() => {
+  hinge = installHingeMock({ state: { posture: 'fully-open' }, angleDegrees: 180 });
+});
+afterEach(() => hinge.uninstall());
+
+it('shows two pages in book posture', async () => {
+  await render(<Reader />);
+  await act(async () => {
+    hinge.setAngleDegrees(110);
+    hinge.setState({
+      posture: 'partially-open',
+      fold: {
+        bounds: { x: 420, y: 0, width: 0, height: 880 },
+        orientation: 'vertical',
+        isSeparating: true,
+        occlusion: 'none',
+      },
+    });
+  });
+  expect(screen.getByTestId('two-pages')).toBeTruthy();
+});
+```
+
+| `HingeMock` method                  | Simulates                                                                 |
+| ----------------------------------- | ------------------------------------------------------------------------- |
+| `setState(state \| undefined)`      | A posture or fold change. `undefined` means a device without a hinge.     |
+| `setAngleDegrees(deg \| undefined)` | A new angle reading. `undefined` means the device can't report its angle. |
+| `reset()`                           | A device without a hinge, and removes all listeners.                      |
+| `uninstall()`                       | Restores the module in use before `installHingeMock()`.                   |
 
 ## Troubleshooting
 

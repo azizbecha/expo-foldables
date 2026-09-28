@@ -1,5 +1,5 @@
 import type { AngleChangeListenerOptions } from './AngleChangeListenerOptions';
-import ExpoFoldablesModule from './ExpoFoldablesModule';
+import getExpoFoldablesModule from './ExpoFoldablesModule';
 import type { HingeState } from './HingeState';
 import type { HingeSubscription } from './HingeSubscription';
 import type { degreesToRadians } from './angleConversion';
@@ -83,19 +83,19 @@ export interface HingeModule {
  */
 export const Hinge: HingeModule = {
   get isAvailable() {
-    return ExpoFoldablesModule.isAvailable;
+    return getExpoFoldablesModule().isAvailable;
   },
 
   get isAngleAvailable() {
-    return ExpoFoldablesModule.isAngleAvailable;
+    return getExpoFoldablesModule().isAngleAvailable;
   },
 
   getState() {
-    return fromNativeState(ExpoFoldablesModule.getState());
+    return fromNativeState(getExpoFoldablesModule().getState());
   },
 
   addOnStateChangeListener(listener) {
-    return ExpoFoldablesModule.addListener('onStateChange', ({ state }) => {
+    return getExpoFoldablesModule().addListener('onStateChange', ({ state }) => {
       listener(fromNativeState(state));
     });
   },
@@ -107,7 +107,8 @@ export const Hinge: HingeModule = {
         `minDeltaDegrees must be a finite number >= 0, received ${minDeltaDegrees}.`
       );
     }
-    if (!ExpoFoldablesModule.isAngleAvailable) {
+    const nativeModule = getExpoFoldablesModule();
+    if (!nativeModule.isAngleAvailable) {
       throw new Error(
         'The hinge angle is not available on this device. Check Hinge.isAngleAvailable first, ' +
           'or use Hinge.getState() to read the hinge posture instead.'
@@ -126,11 +127,11 @@ export const Hinge: HingeModule = {
       listener(angleDegrees);
     };
 
-    const subscription = ExpoFoldablesModule.addListener('onAngleChange', ({ angleDegrees }) => {
+    const subscription = nativeModule.addListener('onAngleChange', ({ angleDegrees }) => {
       deliver(angleDegrees);
     });
     // Native only emits on change, so a device held still would otherwise never report its angle.
-    const currentAngleDegrees = ExpoFoldablesModule.getAngleDegrees();
+    const currentAngleDegrees = nativeModule.getAngleDegrees();
     if (currentAngleDegrees !== null) {
       deliver(currentAngleDegrees);
     }
