@@ -1,4 +1,11 @@
-// Reexport the native module. On web, it will be resolved to ExpoHingeModule.web.ts
-// and on native platforms to ExpoHingeModule.ts
-export { default } from './ExpoHingeModule';
-export * from './ExpoHinge.types';
+export { Hinge } from './Hinge';
+export type { HingeModule } from './Hinge';
+export { useHinge } from './useHinge';
+export { useHingeAngle } from './useHingeAngle';
+export { degreesToRadians, radiansToDegrees } from './angleConversion';
+export type { AngleChangeListenerOptions } from './AngleChangeListenerOptions';
+export type { Fold, FoldOcclusion, FoldOrientation } from './Fold';
+export type { HingePosture } from './HingePosture';
+export type { HingeState } from './HingeState';
+export type { HingeSubscription } from './HingeSubscription';
+export type { Rect } from './Rect';

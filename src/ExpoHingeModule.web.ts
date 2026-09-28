@@ -1,8 +1,16 @@
 import { registerWebModule, NativeModule } from 'expo';
 
-import { ExpoHingeModuleEvents } from './ExpoHinge.types';
+import type { ExpoHingeModuleEvents } from './ExpoHingeModule';
+import type { HingeState } from './HingeState';
 
-// ExpoHingeModule is not available on the web platform.
-class ExpoHingeModule extends NativeModule<ExpoHingeModuleEvents> {}
+// Browsers do not expose a hinge yet, so the web build behaves like a device without one.
+class ExpoHingeModule extends NativeModule<ExpoHingeModuleEvents> {
+  readonly isAvailable = false;
+  readonly isAngleAvailable = false;
 
-export default registerWebModule(ExpoHingeModule, 'ExpoHingeModule');
+  getState(): HingeState | null {
+    return null;
+  }
+}
+
+export default registerWebModule(ExpoHingeModule, 'ExpoHinge');
