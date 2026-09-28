@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
     :ios => '16.4'
   }
   s.swift_version  = '5.9'
-  s.source         = { git: 'https://github.com/azizbecha/expo-foldables.git', tag: s.version.to_s }
+  s.source         = { git: 'https://github.com/azizbecha/expo-foldables.git', tag: "v#{s.version}" }
   s.static_framework = true
 
   s.dependency 'ExpoModulesCore'

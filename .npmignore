@@ -14,3 +14,7 @@ __tests__
 /android/build/
 /example/
 /vitest.config.mts
+/bun.lock
+/.prettierrc
+/eslint.config.cjs
+/tsconfig.json
