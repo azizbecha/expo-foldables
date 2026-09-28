@@ -136,6 +136,18 @@ function Lid() {
 > Make layout decisions from the posture and fold, not from the angle. Apple gives the same guidance for iPhone Duo:
 > the angle is for live effects, such as a control that responds to how far the device is folded.
 
+### Detect the cover screen
+
+Neither iOS nor Android exposes which display an app is running on. On foldables that fold inward, such as iPhone Duo
+and the Pixel Fold, the inner screen can't be seen while the device is closed, so a `closed` posture means your app is
+on the cover screen:
+
+```tsx
+const isOnCoverScreen = useHinge()?.posture === 'closed';
+```
+
+This doesn't hold for flip phones whose apps don't run on the cover screen, or for Android's rear display mode.
+
 ### Use the imperative API
 
 Outside React, or when you need full control over subscriptions:
