@@ -1,65 +1,88 @@
-import { Hinge, degreesToRadians, useHinge, useHingeAngle } from 'expo-foldables';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { useHinge, useHingeAngle } from 'expo-foldables';
+import { ScrollView, StatusBar, StyleSheet, View } from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { FoldOverlay } from './components/FoldOverlay';
+import { HingeDetails } from './components/HingeDetails';
+import { HingeHero } from './components/HingeHero';
+import { colors, spacing } from './theme';
 
 export default function App() {
-  const hinge = useHinge();
-  const angleDegrees = useHingeAngle({ minDeltaDegrees: 1 });
-
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container}>
-        <Text style={styles.header}>expo-foldables</Text>
-        <Group name="Capabilities">
-          <Text>isAvailable: {String(Hinge.isAvailable)}</Text>
-          <Text>isAngleAvailable: {String(Hinge.isAngleAvailable)}</Text>
-        </Group>
-        <Group name="State">
-          {hinge === undefined ? (
-            <Text>No hinge on this device</Text>
-          ) : (
-            <>
-              <Text>posture: {hinge.posture}</Text>
-              <Text>fold: {hinge.fold ? JSON.stringify(hinge.fold, null, 2) : 'none'}</Text>
-            </>
-          )}
-        </Group>
-        <Group name="Angle">
-          {angleDegrees === undefined ? (
-            <Text>No reading</Text>
-          ) : (
-            <>
-              <Text>
-                {angleDegrees.toFixed(1)}° / {degreesToRadians(angleDegrees).toFixed(3)} rad
-              </Text>
-              <View style={[styles.lid, { transform: [{ rotate: `${angleDegrees - 180}deg` }] }]} />
-            </>
-          )}
-        </Group>
-      </ScrollView>
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <StatusBar barStyle="light-content" />
+      <Screen />
+    </SafeAreaProvider>
   );
 }
 
-function Group(props: { name: string; children: React.ReactNode }) {
+function Screen() {
+  const hinge = useHinge();
+  const angleDegrees = useHingeAngle({ minDeltaDegrees: 0.5 });
+  const insets = useSafeAreaInsets();
+  const fold = hinge?.fold;
+
+  const hero = <HingeHero hinge={hinge} angleDegrees={angleDegrees} />;
+  const details = <HingeDetails hinge={hinge} />;
+
+  let content: React.ReactNode;
+  if (fold?.isSeparating && fold.orientation === 'vertical') {
+    // Book posture: one pane on each side of the fold, split exactly at the fold bounds.
+    content = (
+      <View style={styles.row}>
+        <View style={[styles.pane, { width: fold.bounds.x, paddingLeft: insets.left + spacing }]}>
+          {hero}
+        </View>
+        <View style={{ width: fold.bounds.width }} />
+        <View style={[styles.pane, styles.flex, { paddingRight: insets.right + spacing }]}>
+          {details}
+        </View>
+      </View>
+    );
+  } else if (fold?.isSeparating && fold.orientation === 'horizontal') {
+    // Tabletop posture: hero above the fold, details below it.
+    content = (
+      <View style={styles.flex}>
+        <View style={[styles.pane, { height: fold.bounds.y, paddingTop: insets.top + spacing }]}>
+          {hero}
+        </View>
+        <View style={{ height: fold.bounds.height }} />
+        <View style={[styles.pane, styles.flex, { paddingBottom: insets.bottom + spacing }]}>
+          {details}
+        </View>
+      </View>
+    );
+  } else {
+    content = (
+      <ScrollView
+        contentContainerStyle={[
+          styles.column,
+          {
+            paddingTop: insets.top + spacing,
+            paddingBottom: insets.bottom + spacing,
+            paddingLeft: insets.left + spacing,
+            paddingRight: insets.right + spacing,
+          },
+        ]}>
+        {hero}
+        {details}
+      </ScrollView>
+    );
+  }
+
   return (
-    <View style={styles.group}>
-      <Text style={styles.groupHeader}>{props.name}</Text>
-      {props.children}
+    <View style={styles.screen}>
+      {/* Only when separating: the fold then falls in the gap between panes, clear of any content. */}
+      {fold?.isSeparating && <FoldOverlay fold={fold} />}
+      {content}
     </View>
   );
 }
 
-const styles = {
-  header: { fontSize: 30, margin: 20 },
-  groupHeader: { fontSize: 20, marginBottom: 20 },
-  group: { margin: 20, backgroundColor: '#fff', borderRadius: 10, padding: 20, gap: 8 },
-  container: { flex: 1, backgroundColor: '#eee' },
-  lid: {
-    marginTop: 40,
-    alignSelf: 'center' as const,
-    width: 120,
-    height: 4,
-    backgroundColor: '#333',
-    transformOrigin: 'left',
-  },
-};
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: colors.background },
+  flex: { flex: 1 },
+  row: { flex: 1, flexDirection: 'row' },
+  pane: { justifyContent: 'center', alignItems: 'center', padding: spacing },
+  column: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', gap: 40 },
+});
