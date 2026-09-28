@@ -19,3 +19,4 @@ __tests__
 /eslint.config.cjs
 /tsconfig.json
 /plugin/tsconfig.json
+*.tsbuildinfo
