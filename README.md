@@ -35,7 +35,7 @@ Hinge posture, angle, and fold geometry for foldable devices: iPhone Duo and And
 
 | Platform | Requirement                                                                                                            |
 | -------- | ---------------------------------------------------------------------------------------------------------------------- |
-| iOS      | **Xcode 27.1+** (iOS 27.1 SDK) and the [config plugin](#installation). Data on iPhone Duo.                             |
+| iOS      | **Xcode 27.1+** (iOS 27.1 SDK) and [scene support](#installation). Data on iPhone Duo.                                 |
 | Android  | Any foldable. Posture and fold geometry come from Jetpack WindowManager. The angle needs a hinge sensor (Android 11+). |
 | Web      | Supported as a no-op: behaves like a device without a hinge.                                                           |
 
@@ -51,26 +51,25 @@ Expo Go is not supported. Use a [development build](https://docs.expo.dev/develo
 npx expo install expo-foldables
 ```
 
-Add the config plugin to your app config:
+Add the config plugin to your app config. On Expo SDK 57, also enable iOS scene support in
+[`expo-build-properties`](https://docs.expo.dev/versions/latest/sdk/build-properties/)
+(`npx expo install expo-build-properties`):
 
 ```json
 {
   "expo": {
-    "plugins": ["expo-foldables"]
+    "plugins": [
+      "expo-foldables",
+      ["expo-build-properties", { "ios": { "enableSceneSupport": true } }]
+    ]
   }
 }
 ```
 
-On iOS it adopts the UIScene life cycle, which apps built with the iOS 27.1 SDK need in order to launch. On Android
-it makes sure folding doesn't restart your app's activity.
-
-| Option                 | Default | Description                                                                                    |
-| ---------------------- | ------- | ---------------------------------------------------------------------------------------------- |
-| `enableSceneLifecycle` | `true`  | Adopt the UIScene life cycle on iOS. Set to `false` if your app already sets up scenes itself. |
-
-```json
-["expo-foldables", { "enableSceneLifecycle": false }]
-```
+- **Scene support:** apps built with the iOS 27.1 SDK, which this package requires, must adopt the UIScene life cycle
+  or they fail at launch. Expo SDK 58 does this by default, so you can drop `expo-build-properties` there. The
+  `expo-foldables` plugin warns during `prebuild` when an SDK 57 app is missing it.
+- **Android:** the plugin makes sure folding doesn't restart your app's activity.
 
 Then rebuild your app:
 
@@ -300,13 +299,12 @@ it('shows two pages in book posture', async () => {
 Application failed to launch: UIScene life cycle is required for apps built with this SDK.
 ```
 
-This affects every app built with the iOS 27.1 SDK, not only apps using this module. Add the
-[config plugin](#installation) and run `npx expo prebuild --clean`. It needs Expo SDK 57 or later, which ships
-`ExpoAppSceneDelegate`.
+This affects every app built with the iOS 27.1 SDK, not only apps using this module. On Expo SDK 57, enable
+`ios.enableSceneSupport` in `expo-build-properties` (see [Installation](#installation)) and run
+`npx expo prebuild --clean`. It needs `expo` 57.0.23 or newer. Expo SDK 58 adopts scenes by default.
 
-If prebuild warns that it skipped the UIScene life cycle, your `AppDelegate.swift` is customized. Make it conform to
-`ExpoReactNativeFactoryProvider`, remove the code that creates the window, and add a `SceneDelegate` subclassing
-`ExpoAppSceneDelegate`, declared in `UIApplicationSceneManifest` in your Info.plist.
+Scene support only covers the standard Expo `AppDelegate.swift`. For a customized one, see
+[expo/expo#46664](https://github.com/expo/expo/issues/46664).
 
 ### iOS: build fails with missing `UIHinge` symbols
 
