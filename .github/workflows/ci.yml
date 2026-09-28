@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  js:
+    name: Lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+      - run: bunx prettier --check src
+      - run: bun run typecheck
+      - run: bun run test
+      - run: bun run build
+
+  android:
+    name: Compile Android module
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+      - run: bun install --frozen-lockfile
+      - name: Install example app
+        working-directory: example
+        run: bun install --frozen-lockfile
+      - name: Generate example Android project
+        working-directory: example
+        run: bunx expo prebuild --platform android --no-install
+      - name: Compile expo-hinge Kotlin
+        working-directory: example/android
+        run: ./gradlew :expo-hinge:compileDebugKotlin
+
+  # iOS is not built in CI yet: the hinge APIs need Xcode 27.1, which hosted runners do not provide.
