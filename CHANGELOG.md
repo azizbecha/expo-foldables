@@ -6,6 +6,8 @@
 
 ### 🎉 New features
 
+- Config plugin (`"plugins": ["expo-foldables"]`): adopts the UIScene life cycle required by the iOS 27.1 SDK, and makes sure folding doesn't restart the Android activity.
+
 ### 🐛 Bug fixes
 
 ### 💡 Others

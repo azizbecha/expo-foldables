@@ -18,3 +18,4 @@ __tests__
 /.prettierrc
 /eslint.config.cjs
 /tsconfig.json
+/plugin/tsconfig.json
