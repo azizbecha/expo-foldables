@@ -11,6 +11,10 @@ class ExpoFoldablesModule extends NativeModule<ExpoFoldablesModuleEvents> {
   getState(): HingeState | null {
     return null;
   }
+
+  getAngleDegrees(): number | null {
+    return null;
+  }
 }
 
 export default registerWebModule(ExpoFoldablesModule, 'ExpoFoldables');

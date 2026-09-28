@@ -15,6 +15,8 @@ export declare class ExpoFoldablesModule extends NativeModule<ExpoFoldablesModul
   readonly isAvailable: boolean;
   readonly isAngleAvailable: boolean;
   getState(): HingeState | null;
+  /** Latest angle reading, or `null` before the first one. */
+  getAngleDegrees(): number | null;
 }
 
 export default requireNativeModule<ExpoFoldablesModule>('ExpoFoldables');

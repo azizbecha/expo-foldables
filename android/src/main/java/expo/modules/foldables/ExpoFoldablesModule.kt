@@ -64,6 +64,9 @@ class ExpoFoldablesModule : Module(), SensorEventListener {
 
     Function("getState") { currentState() }
 
+    // Latest sensor reading, so new JS listeners get the current angle without waiting for a change.
+    Function("getAngleDegrees") { angleDegrees?.toDouble() }
+
     OnStartObserving(STATE_CHANGE_EVENT) { isObservingState = true }
     OnStopObserving(STATE_CHANGE_EVENT) { isObservingState = false }
     OnStartObserving(ANGLE_CHANGE_EVENT) { isObservingAngle = true }

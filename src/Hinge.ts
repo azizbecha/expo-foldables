@@ -53,6 +53,9 @@ export interface HingeModule {
    * Calls `listener` with the hinge angle in degrees whenever it changes. `0` means folded shut and `180`
    * means fully open. Use {@linkcode degreesToRadians} to convert.
    *
+   * If the current angle is already known, `listener` is also called with it immediately, before this
+   * method returns.
+   *
    * @returns A subscription. Call `remove()` on it to stop listening.
    * @throws When {@linkcode Hinge.isAngleAvailable} is `false`, or when
    * {@linkcode AngleChangeListenerOptions.minDeltaDegrees} is negative or not finite.
@@ -112,7 +115,7 @@ export const Hinge: HingeModule = {
     }
 
     let lastAngleDegrees: number | undefined;
-    return ExpoFoldablesModule.addListener('onAngleChange', ({ angleDegrees }) => {
+    const deliver = (angleDegrees: number) => {
       if (
         lastAngleDegrees !== undefined &&
         Math.abs(angleDegrees - lastAngleDegrees) < minDeltaDegrees
@@ -121,7 +124,17 @@ export const Hinge: HingeModule = {
       }
       lastAngleDegrees = angleDegrees;
       listener(angleDegrees);
+    };
+
+    const subscription = ExpoFoldablesModule.addListener('onAngleChange', ({ angleDegrees }) => {
+      deliver(angleDegrees);
     });
+    // Native only emits on change, so a device held still would otherwise never report its angle.
+    const currentAngleDegrees = ExpoFoldablesModule.getAngleDegrees();
+    if (currentAngleDegrees !== null) {
+      deliver(currentAngleDegrees);
+    }
+    return subscription;
   },
 };
 

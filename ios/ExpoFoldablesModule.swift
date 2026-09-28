@@ -7,6 +7,7 @@ private let angleChangeEvent = "onAngleChange"
 public class ExpoFoldablesModule: Module {
   private let lock = NSLock()
   private var hingeState: HingeState?
+  private var angleDegrees: Double?
   private var isObservingState = false
   private var isObservingAngle = false
 
@@ -28,6 +29,11 @@ public class ExpoFoldablesModule: Module {
 
     Function("getState") { () -> [String: Any]? in
       self.withLock { self.hingeState?.toDictionary() }
+    }
+
+    // Latest reading, so new JS listeners get the current angle without waiting for a change.
+    Function("getAngleDegrees") { () -> Double? in
+      self.withLock { self.angleDegrees }
     }
 
     OnStartObserving(stateChangeEvent) { self.withLock { self.isObservingState = true } }
@@ -79,10 +85,16 @@ public class ExpoFoldablesModule: Module {
       self?.update(state)
     }
     view.onAngleChange = { [weak self] angleDegrees in
-      guard let self, self.withLock({ self.isObservingAngle }) else {
+      guard let self else {
         return
       }
-      self.sendEvent(angleChangeEvent, ["angleDegrees": angleDegrees])
+      let shouldSend = self.withLock { () -> Bool in
+        self.angleDegrees = angleDegrees
+        return self.isObservingAngle
+      }
+      if shouldSend {
+        self.sendEvent(angleChangeEvent, ["angleDegrees": angleDegrees])
+      }
     }
     window.insertSubview(view, at: 0)
     observerView = view
@@ -90,6 +102,9 @@ public class ExpoFoldablesModule: Module {
 
   private func update(_ state: HingeState?) {
     let shouldSend = withLock { () -> Bool in
+      if state == nil {
+        angleDegrees = nil
+      }
       guard hingeState != state else {
         return false
       }

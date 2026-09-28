@@ -123,3 +123,30 @@ describe('native fold: null', () => {
     expect(listener).toHaveBeenCalledWith({ posture: 'closed' });
   });
 });
+
+describe('Hinge.addOnAngleChangeListener initial angle', () => {
+  it('delivers the current angle immediately when known', () => {
+    fakeHingeModule.isAngleAvailable = true;
+    fakeHingeModule.angleDegrees = 180;
+    const listener = vi.fn();
+    Hinge.addOnAngleChangeListener(listener);
+    expect(listener).toHaveBeenCalledWith(180);
+  });
+
+  it('does not call the listener before the first reading', () => {
+    fakeHingeModule.isAngleAvailable = true;
+    const listener = vi.fn();
+    Hinge.addOnAngleChangeListener(listener);
+    expect(listener).not.toHaveBeenCalled();
+  });
+
+  it('applies minDeltaDegrees relative to the initial angle', () => {
+    fakeHingeModule.isAngleAvailable = true;
+    fakeHingeModule.angleDegrees = 180;
+    const listener = vi.fn();
+    Hinge.addOnAngleChangeListener(listener, { minDeltaDegrees: 5 });
+    fakeHingeModule.emit('onAngleChange', { angleDegrees: 178 });
+    fakeHingeModule.emit('onAngleChange', { angleDegrees: 170 });
+    expect(listener.mock.calls).toEqual([[180], [170]]);
+  });
+});

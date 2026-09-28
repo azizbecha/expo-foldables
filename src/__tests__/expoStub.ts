@@ -33,16 +33,22 @@ class FakeHingeModule extends NativeModule {
   isAvailable = false;
   isAngleAvailable = false;
   state: HingeState | null = null;
+  angleDegrees: number | null = null;
 
   getState(): HingeState | null {
     // Native returns a fresh object on every call; mimic that so reference stability is tested.
     return this.state === null ? null : structuredClone(this.state);
   }
 
+  getAngleDegrees(): number | null {
+    return this.angleDegrees;
+  }
+
   reset() {
     this.isAvailable = false;
     this.isAngleAvailable = false;
     this.state = null;
+    this.angleDegrees = null;
     this.removeAllListeners();
   }
 }

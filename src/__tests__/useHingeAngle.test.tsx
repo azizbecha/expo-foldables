@@ -67,3 +67,13 @@ describe('useHingeAngle availability', () => {
     expect(result.current).toBe(75);
   });
 });
+
+describe('useHingeAngle initial angle', () => {
+  it('shows the current angle on mount without waiting for a change', () => {
+    fakeHingeModule.isAngleAvailable = true;
+    fakeHingeModule.isAvailable = true;
+    fakeHingeModule.angleDegrees = 180;
+    const { result } = renderHook(() => useHingeAngle());
+    expect(result.current).toBe(180);
+  });
+});
