@@ -16,3 +16,7 @@ android {
     abortOnError false
   }
 }
+
+dependencies {
+  implementation "androidx.window:window:1.5.1"
+}
